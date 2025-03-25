@@ -1,0 +1,7 @@
+--extra-index-url https://download.pytorch.org/whl/cu118
+
+pandas>=2.2.3
+numpy>=1.26.4
+easygui>=0.98.3
+fuzzywuzzy>=0.18.0
+python-Levenshtein>=0.12.2
