@@ -8,27 +8,35 @@ def calculate_transaction_costs(trade_type, buy_price, sell_price, quantity, app
     stt = 0
     exchange_transaction_charge = 0
     sebi_charges = 0
+    ipft_charges = 0
     stamp_duty = 0
     gst = 0
-    dp_charges = 15.93 if apply_dp else 0  # DP charges applied only once per stock per day
+    dp_charges = 14.75 if apply_dp else 0  # DP charges applied only once per stock per day
 
-    if trade_type == "DIRECT_EQUITY_INTRADAY":
-        brokerage = min((buy_price * quantity * 0.0003) + (sell_price * quantity * 0.0003), 40)
-        stt = round((sell_price * quantity) * 0.00025)
-        exchange_transaction_charge = turnover * 0.0000345
-        sebi_charges = turnover * 0.000001
-        stamp_duty = round((buy_price * quantity) * 0.00003)
-        gst = 0.18 * (brokerage + exchange_transaction_charge + sebi_charges)
+    if trade_type == "BUY":
+        turnover = buy_price * quantity
+        brokerage = 0  # No brokerage for buy
+        stt = round(turnover * 0.001, 2)  # STT at 0.1%
+        exchange_transaction_charge = round(turnover * 0.0000345, 2)  # 0.00345%
+        sebi_charges = round(turnover * 0.000001, 2)  # SEBI charges
+        ipft_charges = round(turnover * 0.000001, 2)  # IPFT
+        stamp_duty = round(turnover * 0.00015, 2)  # Stamp Duty
+        gst = round(0.18 * (exchange_transaction_charge + sebi_charges), 2)  # GST
 
-    elif trade_type == "DIRECT_EQUITY_DELIVERY":
-        stt = round(turnover * 0.001)
-        exchange_transaction_charge = turnover * 0.0000345
-        sebi_charges = turnover * 0.000001
-        stamp_duty = round((buy_price * quantity) * 0.00015)
-        gst = 0.18 * (exchange_transaction_charge + sebi_charges)
+        total_transaction_costs = brokerage + stt + exchange_transaction_charge + sebi_charges + ipft_charges + stamp_duty + gst
 
-    total_transaction_costs = brokerage + stt + exchange_transaction_charge + sebi_charges + stamp_duty + gst + dp_charges
-    return round(total_transaction_costs, 3)
+    elif trade_type == "SELL":
+        turnover = sell_price * quantity  # Sell turnover only
+        stt = round(turnover * 0.001, 2)  # STT at 0.1%
+        exchange_transaction_charge = round(turnover * 0.0000345, 2)  # 0.00345%
+        sebi_charges = round(turnover * 0.000001, 2)  # SEBI charges
+        ipft_charges = round(turnover * 0.000001, 2)  # IPFT
+        stamp_duty = 0  # No stamp duty on sell transactions
+        gst = 0  # GST not applied on sell
+       
+        total_transaction_costs = stt + exchange_transaction_charge + sebi_charges + ipft_charges + dp_charges
+
+    return round(total_transaction_costs, 4)
 
 def add_fee_data(file_path):
     """Adds tax information to a trade data CSV file with DP charges applied only once per stock per day."""
@@ -43,15 +51,15 @@ def add_fee_data(file_path):
     dp_applied = set()
 
     for index, row in data.iterrows():
-        trade_type = str(row['Type']).strip() if pd.notna(row['Type']) else ''
+        trade_type = str(row['Type']).strip().upper() if pd.notna(row['Type']) else ''
         buy_price = row['Value'] / row['Shares'] if row['Shares'] != 0 else 0
         sell_price = buy_price  # Assuming no separate sell price column, adjust if needed
         quantity = row['Shares']
-        date = row['Date']
-        stock = row['Name']
+        date = str(row['Date']).strip()  # Convert to string to avoid datetime issues
+        stock = str(row['Name']).strip()
 
-        # Apply DP charges only once per stock per day
-        apply_dp = (trade_type == "Sell" and (date, stock) not in dp_applied)
+        # Apply DP charges only once per stock per day for Sell transactions
+        apply_dp = (trade_type == "SELL" and (date, stock) not in dp_applied)
         if apply_dp:
             dp_applied.add((date, stock))  # Mark this stock for DP charge on this date
 
@@ -60,4 +68,3 @@ def add_fee_data(file_path):
 
     data.to_csv(file_path, index=False)
     print("Updated CSV with Taxes.")
-
