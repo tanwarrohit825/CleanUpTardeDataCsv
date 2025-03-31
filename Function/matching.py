@@ -4,7 +4,7 @@ from fuzzywuzzy import process, fuzz
 SPECIAL_CASES = {
     "ICICI Pru Bank Nifty ETF": "rohitBank",
     "ICICI Prudential IT ETF": "ICICITECH.NS",
-    "ICICI Pru Nifty 50 ETF": "ICICINIFTY.NS",
+    "ICICI Pru Nifty 50 ETF": "NIFTYIETF.NS",
     "Nippon India Nifty 50 ETF": "NIFTYBEES.NS",
     "Nippon India Gold ETF": "GOLDBEES.NS",
     "Nippon Gold ETF (GOLDBEES)": "GOLDBEES.NS",
