@@ -3,6 +3,7 @@ from fuzzywuzzy import process, fuzz
 # Dictionary for special cases
 SPECIAL_CASES = {
     "ICICI Pru Bank Nifty ETF": "rohitBank",
+    "ICICI Prudential Bank ETF": "rohitBank",
     "ICICI Prudential IT ETF": "ICICITECH.NS",
     "ICICI Pru Nifty 50 ETF": "NIFTYIETF.NS",
     "Nippon India Nifty 50 ETF": "NIFTYBEES.NS",
@@ -15,7 +16,8 @@ SPECIAL_CASES = {
     "HDFC Nifty Small Cap 250 ETF": "HDFCSML250.NS",
     "Nippon Pharma ETF (PHARMABEES)": "PHARMABEES.NS",
     "Nippon Nifty Liquid ETF (LIQUIDBEES)": "LIQUIDBEES.NS",
-    "Nippon Nifty Bank ETF (BANKBEES)": "BANKBEES.NS"
+    "Nippon Nifty Bank ETF (BANKBEES)": "BANKBEES.NS",
+    "NTPC Green Energy": "NTPCGREEN.NS"
 }
 
 def match_name(name, name_dict, threshold=99.5):
