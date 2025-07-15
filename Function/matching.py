@@ -11,6 +11,7 @@ SPECIAL_CASES = {
     "Nippon Gold ETF (GOLDBEES)": "GOLDBEES.NS",
     "Nippon Nifty 50 ETF (NIFTYBEES)": "NIFTYBEES.NS",
     "Nippon Nifty Next 50 ETF (JUNIORBEES)": "JUNIORBEES.NS",
+    "Nippon Nifty Next 50 Junior Bees - ETF" : "JUNIORBEES.NS",
     "Mirae Asset Nifty Midcap 150 ETF": "MAM150ETF.NS",
     "Kotak Nifty Alpha 50 ETF": "ALPHA.NS",
     "HDFC Nifty Small Cap 250 ETF": "HDFCSML250.NS",

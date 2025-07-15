@@ -10,7 +10,7 @@ if not file_path:
     exit()
 
 data = pd.read_csv(file_path)
-data.to_csv('cleanUpTradeData.csv', columns=['Date', 'Time', 'Name', 'Buy/Sell', 'Quantity/Lot', 'Trade Value'], index=False)
+data.to_csv('Csv/cleanUpTradeData.csv', columns=['Date', 'Time', 'Name', 'Buy/Sell', 'Quantity/Lot', 'Trade Value'], index=False)
 
 # Select Key Value File
 file_path = findpath("Select MyKeyValue file")
@@ -38,7 +38,7 @@ data['Symbol'] = data['Name'].apply(lambda x: match_name(x, name_dict))
 data['Symbol'].replace('NA', 'Rohit', inplace=True)
 
 # Save merged data
-data.to_csv('merge.csv', index=False)
+data.to_csv('Csv/merge.csv', index=False)
 
 # Rename columns in merged file
 file_path = findpath("Select merge file")
@@ -54,7 +54,7 @@ merge_file = merge_file.rename(columns={
 })
 
 merge_file.drop(merge_file.columns[merge_file.columns.str.contains('Unnamed', case=False)], axis=1, inplace=True)
-merge_file.to_csv('merge.csv')
+merge_file.to_csv('Csv/merge.csv')
 
 # Add tax data
 add_fee_data(file_path)
